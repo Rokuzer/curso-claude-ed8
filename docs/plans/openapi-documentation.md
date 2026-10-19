@@ -14,7 +14,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T1 — Añadir el script `docs:api` en la raíz** (~5 min)
   - Archivos: `package.json`
   - Detalle: añadir `"docs:api"` que ejecute `npx --yes @redocly/cli@latest lint packages/api/openapi.yaml && npx --yes @redocly/cli@latest build-docs packages/api/openapi.yaml -o packages/api/docs/api.html`. Sin tocar `dependencies`/`devDependencies`.
-- [ ] **T2 — Crear la base de `openapi.yaml`** (~10 min)
+- [x] **T2 — Crear la base de `openapi.yaml`** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `openapi: 3.0.3`, `info` (descripción en español: prefijo `/api/v1`, JWT 8h, roles, clientes como `employees` con `role=cliente`, una unidad por `OrderItem`), `servers` (`http://localhost:3000`), `tags` (Sistema, Auth, Empleados, Restaurantes, Ingredientes, Platos, Pedidos, Público). En `components`: `securitySchemes.bearerAuth`, `parameters` (`Id`, `RestaurantId`), `responses` (`Unauthorized`, `Forbidden`, `RestaurantNotFound`, `IngredientNotFound`, `DishNotFound`) y `schemas` de enums (`Role`, `IngredientUnit`, `DishCategory`, `OrderStatus`) y errores (`DomainError` para `errorHandler`, `SimpleError` para middlewares y pedidos). Incluir `GET /health` con `security: []`.
 - [ ] **T3 — Documentar auth y empleados** (~10 min)

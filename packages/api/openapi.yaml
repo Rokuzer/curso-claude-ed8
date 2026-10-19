@@ -1,0 +1,134 @@
+openapi: 3.0.3
+info:
+  title: Resttek API
+  version: 1.0.0
+  description: |
+    API REST de Resttek, plataforma de gestión de restaurantes.
+
+    - Prefijo de todos los recursos: `/api/v1`. El healthcheck `/health` cuelga de la raíz.
+    - Autenticación: JWT (8 h) obtenido en `/auth/login` o `/auth/register`, enviado como `Authorization: Bearer <token>`.
+    - Roles: `admin`, `manager`, `camarero`, `cocinero`, `cliente`.
+    - Los clientes son filas de `employees` con `role = cliente` y `restaurantId = null`; comparten los endpoints de auth.
+    - Cada unidad pedida en un pedido se convierte en su propio `OrderItem` con `quantity: 1`.
+    - Los errores de dominio (`AppError`) responden `{ error, message }`; los endpoints de pedidos y los middlewares de auth responden solo `{ error }`.
+servers:
+  - url: http://localhost:3000
+    description: Desarrollo local
+tags:
+  - name: Sistema
+  - name: Auth
+  - name: Empleados
+  - name: Restaurantes
+  - name: Ingredientes
+  - name: Platos
+  - name: Pedidos
+  - name: Público
+    description: Endpoints sin autenticación
+
+paths:
+  /health:
+    get:
+      tags: [Sistema]
+      summary: Comprobación de estado
+      operationId: getHealth
+      security: []
+      responses:
+        '200':
+          description: La API está en marcha
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    RestaurantId:
+      name: restaurantId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    Unauthorized:
+      description: Token ausente, malformado o inválido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleError'
+          example:
+            error: 'Unauthorized: No token provided'
+    Forbidden:
+      description: El rol del usuario no tiene permiso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleError'
+          example:
+            error: 'Forbidden: Insufficient permissions'
+    RestaurantNotFound:
+      description: Restaurante no encontrado (`RestaurantNotFoundError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    IngredientNotFound:
+      description: Ingrediente no encontrado (`IngredientNotFoundError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    DishNotFound:
+      description: Plato no encontrado (`DishNotFoundError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+
+  schemas:
+    Role:
+      type: string
+      enum: [admin, manager, camarero, cocinero, cliente]
+    IngredientUnit:
+      type: string
+      enum: [kg, g, l, ml, unidad]
+    DishCategory:
+      type: string
+      enum: [entrante, principal, postre, bebida]
+    OrderStatus:
+      type: string
+      enum: [pendiente, preparando, listo, entregado]
+    DomainError:
+      type: object
+      description: Error de dominio traducido por el `errorHandler` (400 por defecto, 404 si no se encuentra, 401 si las credenciales son inválidas; 500 con `InternalServerError`).
+      properties:
+        error:
+          type: string
+          example: DuplicatedEmailError
+        message:
+          type: string
+          example: Email is already in use
+    SimpleError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Unauthorized
