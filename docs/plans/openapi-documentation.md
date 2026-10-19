@@ -29,7 +29,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T6 — Documentar platos (privados y públicos)** (~8 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `/api/v1/restaurants/{restaurantId}/dishes` (GET `admin`/`manager`/`camarero`/`cocinero`; POST `admin`/`manager`), `.../{id}` (GET, PUT, DELETE 204, 404) y `/api/v1/public/restaurants/{restaurantId}/dishes` (solo `available = true`, `security: []`). Schemas `Dish`, `DishIngredient`, `DishCreateRequest`, `DishUpdateRequest`. Contrastar con `dish.routes.ts`, `dish.controller.ts` y `dish.model.ts`.
-- [ ] **T7 — Documentar pedidos** (~10 min)
+- [x] **T7 — Documentar pedidos** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `POST /api/v1/orders` (201; 400 con `SimpleError`), `GET /orders/active` (query `restaurantId` obligatoria, 400 si falta), `GET /orders/mine`, `GET /orders/{id}` (404) y `PATCH /orders/{orderId}/items/{itemId}/status` (204; 400 para pedido/unidad inexistente o estado inválido). Schemas `OrderCreateRequest`, `Order`, `OrderItem` (`quantity` siempre 1; campos `dishName`, `dishPrice`, `dishCategory`, `restaurantName`, `restaurantLogoUrl` solo en lecturas). Contrastar con `order.routes.ts`, `order.controller.ts` y `order.model.ts`.
 - [ ] **T8 — Verificar cobertura contra el código** (~8 min)

@@ -647,6 +647,155 @@ paths:
                 items:
                   $ref: '#/components/schemas/Dish'
 
+  /api/v1/orders:
+    post:
+      tags: [Pedidos]
+      summary: Crear un pedido
+      description: |
+        Cualquier usuario autenticado. El `clientId` se toma del token.
+        Cada unidad de `quantity` genera un `OrderItem` independiente con `quantity: 1` y estado `pendiente`.
+      operationId: createOrder
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        '201':
+          description: Pedido creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Datos inválidos (p. ej. `restaurantId` vacío o plato inexistente)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/orders/active:
+    get:
+      tags: [Pedidos]
+      summary: Listar los pedidos activos de un restaurante
+      description: Cualquier usuario autenticado.
+      operationId: listActiveOrders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: restaurantId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pedidos activos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Falta `restaurantId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/orders/mine:
+    get:
+      tags: [Pedidos]
+      summary: Listar los pedidos del usuario autenticado
+      operationId: listMyOrders
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Pedidos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/orders/{id}:
+    get:
+      tags: [Pedidos]
+      summary: Obtener un pedido
+      operationId: getOrder
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Pedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Pedido no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /api/v1/orders/{orderId}/items/{itemId}/status:
+    patch:
+      tags: [Pedidos]
+      summary: Cambiar el estado de una unidad del pedido
+      description: Flujo habitual `pendiente` → `preparando` → `listo` → `entregado`. Cualquier usuario autenticado.
+      operationId: updateOrderItemStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/OrderStatus'
+      responses:
+        '204':
+          description: Estado actualizado
+        '400':
+          description: Pedido o unidad no encontrados, o estado inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -987,3 +1136,85 @@ components:
           default: []
           items:
             $ref: '#/components/schemas/DishIngredient'
+    OrderCreateRequest:
+      type: object
+      required: [restaurantId, items]
+      properties:
+        restaurantId:
+          type: string
+          format: uuid
+        tableId:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            type: object
+            required: [dishId, quantity]
+            properties:
+              dishId:
+                type: string
+                format: uuid
+              quantity:
+                type: integer
+                minimum: 1
+                description: Se expande en `quantity` unidades (`OrderItem`) independientes
+              notes:
+                type: string
+                nullable: true
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dishId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          enum: [1]
+        notes:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        dishName:
+          type: string
+          description: Solo en las lecturas
+        dishPrice:
+          type: number
+          description: Solo en las lecturas
+        dishCategory:
+          type: string
+          description: Solo en las lecturas
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        restaurantId:
+          type: string
+          format: uuid
+        tableId:
+          type: string
+          nullable: true
+        clientId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        restaurantName:
+          type: string
+          description: Solo en las lecturas
+        restaurantLogoUrl:
+          type: string
+          nullable: true
+          description: Solo en las lecturas
