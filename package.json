@@ -11,6 +11,7 @@
     "dev:empleados": "npm run start -w @resttek/web-empleados",
     "dev:clientes": "npm run start -w @resttek/web-clientes",
     "test": "npm run test -w @resttek/api",
-    "seed": "npm run seed -w @resttek/api"
+    "seed": "npm run seed -w @resttek/api",
+    "docs:api": "npx --yes @redocly/cli@latest lint packages/api/openapi.yaml && npx --yes @redocly/cli@latest build-docs packages/api/openapi.yaml -o packages/api/docs/api.html"
   }
 }

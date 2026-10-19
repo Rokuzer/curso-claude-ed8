@@ -11,7 +11,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 
 > Cada tarea debe poder completarse en 5-10 minutos. Los cambios son solo documentación/configuración, así que no son testeables con Vitest; se verifican con `npm run docs:api` y contrastando con el código.
 
-- [ ] **T1 — Añadir el script `docs:api` en la raíz** (~5 min)
+- [x] **T1 — Añadir el script `docs:api` en la raíz** (~5 min)
   - Archivos: `package.json`
   - Detalle: añadir `"docs:api"` que ejecute `npx --yes @redocly/cli@latest lint packages/api/openapi.yaml && npx --yes @redocly/cli@latest build-docs packages/api/openapi.yaml -o packages/api/docs/api.html`. Sin tocar `dependencies`/`devDependencies`.
 - [ ] **T2 — Crear la base de `openapi.yaml`** (~10 min)
