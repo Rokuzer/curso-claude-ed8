@@ -26,7 +26,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T5 — Documentar ingredientes** (~7 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `/api/v1/restaurants/{restaurantId}/ingredients` (GET `admin`/`manager`/`cocinero`; POST `admin`) y `.../{id}` (GET, PUT, DELETE 204, 404). Schemas `Ingredient`, `IngredientCreateRequest` (`currentStock` por defecto 0), `IngredientUpdateRequest`. Contrastar con `ingredient.routes.ts`, `ingredient.controller.ts` y `ingredient.model.ts`.
-- [ ] **T6 — Documentar platos (privados y públicos)** (~8 min)
+- [x] **T6 — Documentar platos (privados y públicos)** (~8 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `/api/v1/restaurants/{restaurantId}/dishes` (GET `admin`/`manager`/`camarero`/`cocinero`; POST `admin`/`manager`), `.../{id}` (GET, PUT, DELETE 204, 404) y `/api/v1/public/restaurants/{restaurantId}/dishes` (solo `available = true`, `security: []`). Schemas `Dish`, `DishIngredient`, `DishCreateRequest`, `DishUpdateRequest`. Contrastar con `dish.routes.ts`, `dish.controller.ts` y `dish.model.ts`.
 - [ ] **T7 — Documentar pedidos** (~10 min)

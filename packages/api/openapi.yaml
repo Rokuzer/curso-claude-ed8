@@ -493,6 +493,160 @@ paths:
         '404':
           $ref: '#/components/responses/IngredientNotFound'
 
+  /api/v1/restaurants/{restaurantId}/dishes:
+    get:
+      tags: [Platos]
+      summary: Listar los platos de un restaurante
+      description: Roles `admin`, `manager`, `camarero`, `cocinero`. Incluye platos no disponibles.
+      operationId: listDishes
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Lista de platos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Platos]
+      summary: Crear un plato
+      description: Roles `admin`, `manager`.
+      operationId: createDish
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishCreateRequest'
+      responses:
+        '201':
+          description: Plato creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '400':
+          description: Nombre vacío, precio no positivo, categoría inválida o ingrediente inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/restaurants/{restaurantId}/dishes/{id}:
+    get:
+      tags: [Platos]
+      summary: Obtener un plato
+      description: Roles `admin`, `manager`, `camarero`, `cocinero`.
+      operationId: getDish
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Plato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DishNotFound'
+    put:
+      tags: [Platos]
+      summary: Actualizar un plato
+      description: Roles `admin`, `manager`. Sustituye todos los campos y la lista de ingredientes.
+      operationId: updateDish
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishUpdateRequest'
+      responses:
+        '200':
+          description: Plato actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DishNotFound'
+    delete:
+      tags: [Platos]
+      summary: Eliminar un plato
+      description: Roles `admin`, `manager`.
+      operationId: deleteDish
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: Plato eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DishNotFound'
+
+  /api/v1/public/restaurants/{restaurantId}/dishes:
+    get:
+      tags: [Público]
+      summary: Listar los platos disponibles de un restaurante
+      description: Solo devuelve platos con `available = true`.
+      operationId: listPublicDishes
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Platos disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -747,3 +901,89 @@ components:
         currentStock:
           type: number
           minimum: 0
+    DishIngredient:
+      type: object
+      required: [ingredientId, quantity]
+      properties:
+        ingredientId:
+          type: string
+          format: uuid
+        quantity:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+    Dish:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+        category:
+          $ref: '#/components/schemas/DishCategory'
+        available:
+          type: boolean
+        restaurantId:
+          type: string
+          format: uuid
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishIngredient'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    DishCreateRequest:
+      type: object
+      required: [name, price, category]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        category:
+          $ref: '#/components/schemas/DishCategory'
+        available:
+          type: boolean
+          default: true
+        ingredients:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/DishIngredient'
+    DishUpdateRequest:
+      type: object
+      required: [name, price, category, available]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        category:
+          $ref: '#/components/schemas/DishCategory'
+        available:
+          type: boolean
+        ingredients:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/DishIngredient'
