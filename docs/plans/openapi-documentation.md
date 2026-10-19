@@ -17,7 +17,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T2 — Crear la base de `openapi.yaml`** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `openapi: 3.0.3`, `info` (descripción en español: prefijo `/api/v1`, JWT 8h, roles, clientes como `employees` con `role=cliente`, una unidad por `OrderItem`), `servers` (`http://localhost:3000`), `tags` (Sistema, Auth, Empleados, Restaurantes, Ingredientes, Platos, Pedidos, Público). En `components`: `securitySchemes.bearerAuth`, `parameters` (`Id`, `RestaurantId`), `responses` (`Unauthorized`, `Forbidden`, `RestaurantNotFound`, `IngredientNotFound`, `DishNotFound`) y `schemas` de enums (`Role`, `IngredientUnit`, `DishCategory`, `OrderStatus`) y errores (`DomainError` para `errorHandler`, `SimpleError` para middlewares y pedidos). Incluir `GET /health` con `security: []`.
-- [ ] **T3 — Documentar auth y empleados** (~10 min)
+- [x] **T3 — Documentar auth y empleados** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `paths` `/api/v1/auth/login` (200, 401 `InvalidCredentialsError`) y `/api/v1/auth/register` (201, 400) con `security: []`; `/api/v1/employees` (GET con `limit`, `offset`, `role`; POST), `/api/v1/employees/{id}` (GET, 404) y `/api/v1/restaurants/{restaurantId}/employees` (GET), todos solo `admin`. Schemas `LoginRequest`, `RegisterRequest`, `AuthResponse`, `Employee`, `CreateEmployeeRequest`. Contrastar con `AuthController.ts`, `EmployeeController.ts` y `Employee.ts`.
 - [ ] **T4 — Documentar restaurantes (privados y públicos)** (~10 min)

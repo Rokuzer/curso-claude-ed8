@@ -44,6 +44,179 @@ paths:
                     type: string
                     example: ok
 
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Iniciar sesión
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Credenciales válidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Credenciales inválidas (`InvalidCredentialsError`)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+
+  /api/v1/auth/register:
+    post:
+      tags: [Auth]
+      summary: Registrar un cliente
+      description: Crea un empleado con `role = cliente` y `restaurantId = null` y devuelve su token.
+      operationId: registerClient
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Cliente creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Datos inválidos o email ya en uso (`DuplicatedEmailError`, `InvalidEmailError`, `FirstNameRequiredError`, ...)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+
+  /api/v1/employees:
+    get:
+      tags: [Empleados]
+      summary: Listar empleados (paginado)
+      description: Solo `admin`.
+      operationId: listEmployees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: role
+          in: query
+          description: Filtra por rol
+          schema:
+            $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          description: Lista de empleados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Empleados]
+      summary: Crear un empleado
+      description: Solo `admin`.
+      operationId: createEmployee
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmployeeRequest'
+      responses:
+        '201':
+          description: Empleado creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Datos inválidos, rol inválido o email ya en uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/employees/{id}:
+    get:
+      tags: [Empleados]
+      summary: Obtener un empleado
+      description: Solo `admin`.
+      operationId: getEmployee
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Empleado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Empleado no encontrado (`EmployeeNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+
+  /api/v1/restaurants/{restaurantId}/employees:
+    get:
+      tags: [Empleados]
+      summary: Listar los empleados de un restaurante
+      description: Solo `admin`.
+      operationId: listRestaurantEmployees
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Empleados del restaurante
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -132,3 +305,75 @@ components:
         error:
           type: string
           example: Unauthorized
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@resttek.com
+        password:
+          type: string
+          format: password
+    RegisterRequest:
+      type: object
+      required: [firstName, lastName, email, password]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT con `id`, `role` y `restaurantId`; caduca en 8 h
+        employee:
+          $ref: '#/components/schemas/Employee'
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/Role'
+        restaurantId:
+          type: string
+          format: uuid
+          nullable: true
+    CreateEmployeeRequest:
+      type: object
+      required: [firstName, lastName, email, password, role]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        role:
+          $ref: '#/components/schemas/Role'
+        restaurantId:
+          type: string
+          format: uuid
+          nullable: true
