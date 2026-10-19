@@ -32,7 +32,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T7 — Documentar pedidos** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `POST /api/v1/orders` (201; 400 con `SimpleError`), `GET /orders/active` (query `restaurantId` obligatoria, 400 si falta), `GET /orders/mine`, `GET /orders/{id}` (404) y `PATCH /orders/{orderId}/items/{itemId}/status` (204; 400 para pedido/unidad inexistente o estado inválido). Schemas `OrderCreateRequest`, `Order`, `OrderItem` (`quantity` siempre 1; campos `dishName`, `dishPrice`, `dishCategory`, `restaurantName`, `restaurantLogoUrl` solo en lecturas). Contrastar con `order.routes.ts`, `order.controller.ts` y `order.model.ts`.
-- [ ] **T8 — Verificar cobertura contra el código** (~8 min)
+- [x] **T8 — Verificar cobertura contra el código** (~8 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: listar los `router.<método>(...)` de `routes/*.routes.ts` y `contexts/employee/infrastructure/http/*.routes.ts` junto con los montajes de `app.ts`, y comprobar que cada método+path existe en `paths` con los roles de `authorize([...])` correctos. Corregir lo que falte o sobre.
 - [ ] **T9 — Generar `docs/api.html`** (~5 min)
