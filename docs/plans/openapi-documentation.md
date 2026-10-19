@@ -35,7 +35,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T8 — Verificar cobertura contra el código** (~8 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: listar los `router.<método>(...)` de `routes/*.routes.ts` y `contexts/employee/infrastructure/http/*.routes.ts` junto con los montajes de `app.ts`, y comprobar que cada método+path existe en `paths` con los roles de `authorize([...])` correctos. Corregir lo que falte o sobre.
-- [ ] **T9 — Generar `docs/api.html`** (~5 min)
+- [x] **T9 — Generar `docs/api.html`** (~5 min)
   - Archivos: `packages/api/docs/api.html`
   - Detalle: ejecutar `npm run docs:api` desde la raíz. Debe validar sin errores (los avisos de `operation-4xx-response` en endpoints públicos son aceptables) y producir el HTML. Comprobar que el archivo existe y no está vacío.
 - [ ] **T10 — Documentar el mantenimiento en `CLAUDE.md`** (~5 min)
