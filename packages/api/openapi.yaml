@@ -358,6 +358,141 @@ paths:
         '404':
           $ref: '#/components/responses/RestaurantNotFound'
 
+  /api/v1/restaurants/{restaurantId}/ingredients:
+    get:
+      tags: [Ingredientes]
+      summary: Listar los ingredientes de un restaurante
+      description: Roles `admin`, `manager`, `cocinero`.
+      operationId: listIngredients
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Lista de ingredientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Ingredientes]
+      summary: Crear un ingrediente
+      description: Solo `admin`.
+      operationId: createIngredient
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientCreateRequest'
+      responses:
+        '201':
+          description: Ingrediente creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Nombre vacío, unidad inválida o stock negativo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/restaurants/{restaurantId}/ingredients/{id}:
+    get:
+      tags: [Ingredientes]
+      summary: Obtener un ingrediente
+      description: Roles `admin`, `manager`, `cocinero`.
+      operationId: getIngredient
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Ingrediente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/IngredientNotFound'
+    put:
+      tags: [Ingredientes]
+      summary: Actualizar un ingrediente
+      description: Solo `admin`.
+      operationId: updateIngredient
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientUpdateRequest'
+      responses:
+        '200':
+          description: Ingrediente actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Nombre vacío, unidad inválida o stock negativo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/IngredientNotFound'
+    delete:
+      tags: [Ingredientes]
+      summary: Eliminar un ingrediente
+      description: Solo `admin`.
+      operationId: deleteIngredient
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: Ingrediente eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/IngredientNotFound'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -568,3 +703,47 @@ components:
         logoUrl:
           type: string
           nullable: true
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        unit:
+          $ref: '#/components/schemas/IngredientUnit'
+        currentStock:
+          type: number
+        restaurantId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    IngredientCreateRequest:
+      type: object
+      required: [name, unit]
+      properties:
+        name:
+          type: string
+        unit:
+          $ref: '#/components/schemas/IngredientUnit'
+        currentStock:
+          type: number
+          minimum: 0
+          default: 0
+    IngredientUpdateRequest:
+      type: object
+      required: [name, unit, currentStock]
+      properties:
+        name:
+          type: string
+        unit:
+          $ref: '#/components/schemas/IngredientUnit'
+        currentStock:
+          type: number
+          minimum: 0
