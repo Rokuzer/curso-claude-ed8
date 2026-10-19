@@ -217,6 +217,147 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
 
+  /api/v1/restaurants:
+    get:
+      tags: [Restaurantes]
+      summary: Listar restaurantes
+      description: |
+        `admin` recibe todos los restaurantes; el resto de roles recibe solo el suyo
+        (o `[]` si su token no tiene `restaurantId`).
+      operationId: listRestaurants
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de restaurantes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Restaurantes]
+      summary: Crear un restaurante
+      description: Solo `admin`.
+      operationId: createRestaurant
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+      responses:
+        '201':
+          description: Restaurante creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Datos inválidos (nombre, dirección, email, teléfono o propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/restaurants/{id}:
+    get:
+      tags: [Restaurantes]
+      summary: Obtener un restaurante
+      operationId: getRestaurant
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Restaurante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+    put:
+      tags: [Restaurantes]
+      summary: Actualizar un restaurante
+      description: Solo `admin`. Sustituye todos los campos.
+      operationId: updateRestaurant
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantInput'
+      responses:
+        '200':
+          description: Restaurante actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+
+  /api/v1/public/restaurants:
+    get:
+      tags: [Público]
+      summary: Listar todos los restaurantes
+      operationId: listPublicRestaurants
+      security: []
+      responses:
+        '200':
+          description: Lista de restaurantes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+
+  /api/v1/public/restaurants/{id}:
+    get:
+      tags: [Público]
+      summary: Obtener un restaurante
+      operationId: getPublicRestaurant
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Restaurante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -376,4 +517,54 @@ components:
         restaurantId:
           type: string
           format: uuid
+          nullable: true
+    Restaurant:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        ownerFirstName:
+          type: string
+        ownerLastName:
+          type: string
+        logoUrl:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    RestaurantInput:
+      type: object
+      required: [name, address, email, phone, ownerFirstName, ownerLastName]
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          description: 7-20 caracteres entre dígitos, espacios, `-`, `(`, `)` y `+` inicial opcional
+          example: '+34 600 123 456'
+        ownerFirstName:
+          type: string
+        ownerLastName:
+          type: string
+        logoUrl:
+          type: string
           nullable: true

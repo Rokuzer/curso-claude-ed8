@@ -20,7 +20,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T3 — Documentar auth y empleados** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `paths` `/api/v1/auth/login` (200, 401 `InvalidCredentialsError`) y `/api/v1/auth/register` (201, 400) con `security: []`; `/api/v1/employees` (GET con `limit`, `offset`, `role`; POST), `/api/v1/employees/{id}` (GET, 404) y `/api/v1/restaurants/{restaurantId}/employees` (GET), todos solo `admin`. Schemas `LoginRequest`, `RegisterRequest`, `AuthResponse`, `Employee`, `CreateEmployeeRequest`. Contrastar con `AuthController.ts`, `EmployeeController.ts` y `Employee.ts`.
-- [ ] **T4 — Documentar restaurantes (privados y públicos)** (~10 min)
+- [x] **T4 — Documentar restaurantes (privados y públicos)** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `/api/v1/restaurants` (GET: `admin` ve todos, el resto solo el suyo o `[]`; POST solo `admin`), `/api/v1/restaurants/{id}` (GET, PUT solo `admin`, 404), `/api/v1/public/restaurants` y `/api/v1/public/restaurants/{id}` con `security: []`. Schemas `Restaurant` y `RestaurantInput` (regla del teléfono `PHONE_REGEX` de `restaurant.service.ts`). Contrastar con `restaurant.controller.ts` y las dos rutas.
 - [ ] **T5 — Documentar ingredientes** (~7 min)
