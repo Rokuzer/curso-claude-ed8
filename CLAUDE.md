@@ -23,6 +23,7 @@ npm install                 # instala todos los workspaces
 npm run seed                # puebla SQLite (INSERT OR IGNORE, se puede repetir); imprime las credenciales
 npm run dev:api             # tsx watch, http://localhost:3000 (GET /health)
 npm run dev:admin           # también dev:empleados, dev:clientes (ng serve con proxy /api a :3000)
+npm run docs:api            # valida packages/api/openapi.yaml y regenera packages/api/docs/api.html (npx @redocly/cli)
 npm test                    # solo tests de la API (vitest run); los frontends no tienen script de test
 ```
 
@@ -67,4 +68,5 @@ Detalles que abarcan varios archivos:
 ## Otros
 
 - `docs/revisiones/` contiene revisiones de consistencia entre documentación y código (2026-08-19); actualiza el documento correspondiente en `docs/` cuando cambies el comportamiento que describe.
+- `packages/api/openapi.yaml` es el contrato de la API (OpenAPI 3) y `packages/api/docs/api.html` su HTML generado con `npm run docs:api`. Al cambiar endpoints, DTOs, errores o roles, actualiza ambos; la skill `plan-api-change` lo incluye en los planes.
 - `scripts/seed-issues.sh` crea issues de GitHub a partir de `scripts/issues.json` (requiere `gh` y `jq`).

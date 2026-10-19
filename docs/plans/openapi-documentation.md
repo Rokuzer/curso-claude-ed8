@@ -38,7 +38,7 @@ Cubrir la issue "Generar documentación con OpenAPI" de `scripts/issues.json`: c
 - [x] **T9 — Generar `docs/api.html`** (~5 min)
   - Archivos: `packages/api/docs/api.html`
   - Detalle: ejecutar `npm run docs:api` desde la raíz. Debe validar sin errores (los avisos de `operation-4xx-response` en endpoints públicos son aceptables) y producir el HTML. Comprobar que el archivo existe y no está vacío.
-- [ ] **T10 — Documentar el mantenimiento en `CLAUDE.md`** (~5 min)
+- [x] **T10 — Documentar el mantenimiento en `CLAUDE.md`** (~5 min)
   - Archivos: `CLAUDE.md`
   - Detalle: en la sección "Otros", indicar que `packages/api/openapi.yaml` es el contrato de la API y `packages/api/docs/api.html` su HTML generado con `npm run docs:api`, que ambos se actualizan al tocar endpoints, DTOs, errores o roles, y que la skill `plan-api-change` lo incluye en los planes. Añadir `npm run docs:api` a la lista de comandos.
 
