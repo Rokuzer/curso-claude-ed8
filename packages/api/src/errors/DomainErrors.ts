@@ -228,3 +228,87 @@ export class TableNotOccupiedError extends AppError {
     super('Table is not occupied')
   }
 }
+
+export class InvalidDiscountTypeError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Invalid discount type')
+  }
+}
+
+export class DiscountCodeRequiredError extends AppError {
+  constructor() {
+    super('Discount code is required')
+  }
+}
+
+export class InvalidDiscountValueError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Discount value must be a positive number')
+  }
+}
+
+export class InvalidDiscountExpirationError extends AppError {
+  constructor() {
+    super('Discount expiration must be a valid date')
+  }
+}
+
+export class InvalidDiscountMaxUsesError extends AppError {
+  constructor() {
+    super('Discount max uses must be an integer greater than or equal to 1')
+  }
+}
+
+export class DiscountCodeNotFoundError extends AppError {
+  constructor() {
+    super('Discount code not found')
+  }
+}
+
+export class DiscountCodeInvalidError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Discount code is not valid')
+  }
+}
+
+export class DuplicatedDiscountCodeError extends AppError {
+  constructor() {
+    super('A discount code with this value already exists in the restaurant')
+  }
+}
+
+export class InvalidPointsRuleError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Invalid points rule')
+  }
+}
+
+export class PointsRuleNotFoundError extends AppError {
+  constructor() {
+    super('Points rule not found')
+  }
+}
+
+export class DuplicatedPointsRuleError extends AppError {
+  constructor() {
+    super('A points rule with this amount of points already exists in the restaurant')
+  }
+}
+
+export class InsufficientPointsError extends AppError {
+  constructor() {
+    super('Not enough points to redeem this rule')
+  }
+}
+
+export class BillAlreadyRequestedError extends AppError {
+  constructor() {
+    super('The bill for this order was already requested')
+  }
+}
+
+export class BillNotFoundError extends AppError {
+  constructor() {
+    super('Bill not found')
+  }
+}

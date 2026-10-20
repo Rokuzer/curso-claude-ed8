@@ -11,6 +11,8 @@ import publicDishRoutes from '@routes/dish.public.routes.js'
 import tableRoutes from '@routes/table.routes.js'
 import publicTableRoutes from '@routes/table.public.routes.js'
 import orderRoutes from '@routes/order.routes.js'
+import discountRoutes from '@routes/discount.routes.js'
+import pointsRulesRoutes, { myPointsRouter } from '@routes/points.routes.js'
 import { errorHandler } from '@shared/infrastructure/http/errorHandler.js'
 
 const app = express()
@@ -28,6 +30,9 @@ app.use('/api/v1/restaurants', restaurantRoutes)
 app.use('/api/v1/restaurants/:restaurantId/ingredients', ingredientRoutes)
 app.use('/api/v1/restaurants/:restaurantId/dishes', dishRoutes)
 app.use('/api/v1/restaurants/:restaurantId/tables', tableRoutes)
+app.use('/api/v1/restaurants/:restaurantId/discounts', discountRoutes)
+app.use('/api/v1/restaurants/:restaurantId/points-rules', pointsRulesRoutes)
+app.use('/api/v1/restaurants/:restaurantId/points', myPointsRouter)
 app.use('/api/v1/restaurants/:restaurantId/employees', restaurantEmployeeRoutes)
 
 app.get('/health', (_req, res) => {

@@ -1,0 +1,20 @@
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.discount-code {
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+}
+
+.status-active {
+  background: var(--green-glow);
+  color: var(--green-light);
+}
+
+.status-inactive {
+  background: var(--red-glow);
+  color: var(--red);
+}
