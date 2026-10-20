@@ -80,4 +80,33 @@ describe('DiscountService', () => {
             await expect(service.getById('rest-1', 'nope')).rejects.toThrow(DiscountCodeNotFoundError)
         })
     })
+    describe('update and delete', () => {
+        it('updates fields keeping id, restaurant and usedCount', async () => {
+            const created = await service.create('rest-1', { code: 'A', type: 'fixed', value: 5 })
+            await discounts.incrementUsed(created.id)
+            const updated = await service.update('rest-1', created.id, { code: 'a', type: 'percent', value: 15, active: false })
+            expect(updated).toMatchObject({ id: created.id, restaurantId: 'rest-1', code: 'A', type: 'percent', value: 15, active: false, usedCount: 1 })
+            expect((await discounts.findById(created.id))?.value).toBe(15)
+        })
+
+        it('rejects renaming to a code already used by another discount', async () => {
+            await service.create('rest-1', { code: 'A', type: 'fixed', value: 5 })
+            const b = await service.create('rest-1', { code: 'B', type: 'fixed', value: 5 })
+            await expect(service.update('rest-1', b.id, { code: 'A', type: 'fixed', value: 5 })).rejects.toThrow(DuplicatedDiscountCodeError)
+        })
+
+        it('rejects invalid values and unknown ids on update', async () => {
+            const created = await service.create('rest-1', { code: 'A', type: 'fixed', value: 5 })
+            await expect(service.update('rest-1', created.id, { code: 'A', type: 'percent', value: 150 })).rejects.toThrow(InvalidDiscountValueError)
+            await expect(service.update('rest-1', 'nope', { code: 'A', type: 'fixed', value: 5 })).rejects.toThrow(DiscountCodeNotFoundError)
+        })
+
+        it('deletes a code and fails for unknown or foreign ids', async () => {
+            const created = await service.create('rest-1', { code: 'A', type: 'fixed', value: 5 })
+            await expect(service.delete('rest-2', created.id)).rejects.toThrow(DiscountCodeNotFoundError)
+            await service.delete('rest-1', created.id)
+            expect(await discounts.findById(created.id)).toBeNull()
+            await expect(service.delete('rest-1', created.id)).rejects.toThrow(DiscountCodeNotFoundError)
+        })
+    })
 })

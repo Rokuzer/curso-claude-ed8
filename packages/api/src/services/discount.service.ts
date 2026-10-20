@@ -55,6 +55,23 @@ export class DiscountService {
         return discount
     }
 
+    async update(restaurantId: string, id: string, input: DiscountInput): Promise<DiscountCode> {
+        const existing = await this.getById(restaurantId, id)
+        const fields = this.validateFields(input)
+        if (fields.code !== existing.code) {
+            await this.ensureCodeAvailable(restaurantId, fields.code)
+        }
+
+        const updated: DiscountCode = { ...existing, ...fields }
+        await this.discountRepository.save(updated)
+        return updated
+    }
+
+    async delete(restaurantId: string, id: string): Promise<void> {
+        await this.getById(restaurantId, id)
+        await this.discountRepository.delete(id)
+    }
+
     private async ensureRestaurantExists(restaurantId: string): Promise<void> {
         if (!await this.restaurantRepository.findById(restaurantId)) {
             throw new RestaurantNotFoundError()

@@ -29,7 +29,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T6 — Servicio de códigos de descuento (CRUD)** (~10 min)
   - Archivos: `packages/api/src/services/discount.service.ts`
   - Detalle: `create`/`update`/`delete`/`list`/`getById` con `ensureRestaurantExists`, validación (`code` no vacío y único por restaurante, `value > 0`, `percent` ≤ 100, `expiresAt` válida) y `randomUUID()`.
-- [ ] **T7 — Tests del servicio de códigos** (~8 min)
+- [x] **T7 — Tests del servicio de códigos** (~8 min)
   - Archivos: `packages/api/src/services/discount.service.test.ts`
   - Detalle: Vitest con `MockDiscountRepository` y `MockRestaurantRepository`: alta correcta, código duplicado, `percent` > 100, restaurante inexistente, borrado.
 - [ ] **T8 — Servicio de reglas de puntos** (~8 min)
