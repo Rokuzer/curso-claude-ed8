@@ -14,7 +14,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T1 — Modelos de descuento, regla de puntos y cuenta** (~8 min)
   - Archivos: `packages/api/src/models/discount.model.ts`, `packages/api/src/models/bill.model.ts`
   - Detalle: definir `DiscountCode` (`id`, `restaurantId`, `code`, `type: 'percent' | 'fixed'`, `value`, `active`, `expiresAt?`, `maxUses?`, `usedCount`), `PointsRule` (`id`, `restaurantId`, `points`, `discountAmount`) y `Bill` (`orderId`, `subtotal`, `discountCode?`, `codeDiscount`, `pointsUsed`, `pointsDiscount`, `total`, `createdAt`), con `toJSON` como en `table.model.ts`. Respetar `exactOptionalPropertyTypes`.
-- [ ] **T2 — Errores de dominio** (~5 min)
+- [x] **T2 — Errores de dominio** (~5 min)
   - Archivos: `packages/api/src/errors/DomainErrors.ts`
   - Detalle: añadir `DiscountCodeNotFoundError` (404), `DiscountCodeInvalidError` (400: inactivo, caducado, agotado), `DuplicateDiscountCodeError` (409), `InsufficientPointsError` (400), `PointsRuleNotFoundError` (404) y `BillAlreadyRequestedError` (409), siguiendo el formato de los existentes.
 - [ ] **T3 — Tablas SQLite** (~8 min)
