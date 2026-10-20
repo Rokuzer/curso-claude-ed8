@@ -51,7 +51,7 @@ contexts/employee/
 
 `contexts/shared/` no es un bounded context de negocio: contiene el value object `Email` y los middlewares y el `errorHandler` de Express.
 
-### 2. Por capas → `restaurant`, `dish`, `ingredient`, `order`, `table`
+### 2. Por capas → `restaurant`, `dish`, `ingredient`, `order`, `table`, `discount`, `points`, `bill`
 
 El resto de dominios **no** usan bounded contexts. Se organizan en carpetas transversales por tipo de fichero:
 
@@ -342,6 +342,24 @@ Ninguna ruta de pedidos aplica `authorize()`: cualquier usuario autenticado pued
 `GET /orders/active` devuelve los pedidos del restaurante que tengan **al menos un ítem** en estado distinto de `entregado`.
 
 Al crear un pedido, el servicio **expande las cantidades**: un ítem con `quantity: 3` se guarda como 3 filas de `order_items` con `quantity: 1` cada una, para poder seguir el estado de cada unidad por separado.
+
+### Descuentos, puntos y cuenta
+
+| Método | Ruta | Roles |
+| --- | --- | --- |
+| `POST` | `/api/v1/restaurants/:restaurantId/discounts` | admin (409 si el `code` ya existe en el restaurante) |
+| `GET` | `/api/v1/restaurants/:restaurantId/discounts` | admin, manager |
+| `GET` | `/api/v1/restaurants/:restaurantId/discounts/:id` | admin, manager |
+| `PUT` | `/api/v1/restaurants/:restaurantId/discounts/:id` | admin |
+| `DELETE` | `/api/v1/restaurants/:restaurantId/discounts/:id` | admin |
+| `POST` | `/api/v1/restaurants/:restaurantId/points-rules` | admin (409 si ya hay un tramo con esos `points`) |
+| `GET` | `/api/v1/restaurants/:restaurantId/points-rules` | admin, manager, cliente |
+| `PUT` / `DELETE` | `/api/v1/restaurants/:restaurantId/points-rules/:id` | admin |
+| `GET` | `/api/v1/restaurants/:restaurantId/points/me` | cliente — saldo propio en el restaurante (0 si no tiene) |
+| `POST` | `/api/v1/orders/:id/bill` | cliente — pide la cuenta de un pedido propio (201) |
+| `GET` | `/api/v1/orders/:id/bill` | cliente — cuenta de un pedido propio |
+
+Pedir la cuenta (`BillService.requestBill`) calcula el `subtotal` con los precios actuales de los platos, aplica opcionalmente un código (`discountCode`) y un tramo de puntos (`pointsRuleId`) y guarda la cuenta, de modo que el total queda congelado. Un pedido solo puede tener una cuenta (409 `BillAlreadyRequestedError`) y un pedido ajeno responde 404. Un código inexistente da 404; inactivo, caducado o agotado, 400 `DiscountCodeInvalidError`. Canjear un tramo sin saldo suficiente da 400 `InsufficientPointsError`. El descuento total nunca supera el subtotal.
 
 ---
 

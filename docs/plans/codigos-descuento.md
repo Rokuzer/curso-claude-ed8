@@ -59,7 +59,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T16 — Regenerar docs/api.html** (~5 min)
   - Archivos: `packages/api/docs/api.html`
   - Detalle: ejecutar `npm run docs:api` desde la raíz; debe terminar sin errores.
-- [ ] **T17 — Actualizar documentación de `docs/`** (~8 min)
+- [x] **T17 — Actualizar documentación de `docs/`** (~8 min)
   - Archivos: `docs/arquitectura/arquitectura-api.md`, `docs/dominio/modelo-datos.md`, `docs/dominio/glosario.md`
   - Detalle: endpoints nuevos (sección Endpoints) y dominios por capas; ER y tablas `discount_codes`, `points_rules`, `customer_points`, `bills`; glosario: código de descuento, puntos, regla de puntos, cuenta.
 - [ ] **T18 — web-admin: modelo, servicio y store de descuentos** (~10 min)

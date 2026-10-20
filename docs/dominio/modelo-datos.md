@@ -18,6 +18,11 @@ erDiagram
     ingredients ||--o{ dish_ingredients : "usado en"
     orders ||--o{ order_items : "contiene"
     dishes ||--o{ order_items : "pedido como"
+    restaurants ||--o{ discount_codes : "ofrece"
+    restaurants ||--o{ points_rules : "define"
+    restaurants ||--o{ customer_points : "acumula"
+    employees ||--o{ customer_points : "posee"
+    orders ||--o| bills : "genera"
 
     restaurants {
         TEXT id PK
@@ -96,6 +101,42 @@ erDiagram
         INTEGER quantity
         TEXT notes
         TEXT status
+    }
+
+    discount_codes {
+        TEXT id PK
+        TEXT restaurant_id FK
+        TEXT code
+        TEXT type
+        REAL value
+        INTEGER active
+        TEXT expires_at
+        INTEGER max_uses
+        INTEGER used_count
+    }
+
+    points_rules {
+        TEXT id PK
+        TEXT restaurant_id FK
+        INTEGER points
+        REAL discount_amount
+    }
+
+    customer_points {
+        TEXT client_id PK
+        TEXT restaurant_id PK
+        INTEGER balance
+    }
+
+    bills {
+        TEXT order_id PK
+        REAL subtotal
+        TEXT discount_code
+        REAL code_discount
+        INTEGER points_used
+        REAL points_discount
+        REAL total
+        TEXT created_at
     }
 ```
 
@@ -251,6 +292,74 @@ Líneas de pedido. Cada ítem es un plato con cantidad y estado.
 
 ---
 
+### `discount_codes`
+
+Códigos de descuento que un admin crea para su restaurante.
+
+| Columna | Tipo | Nullable | Descripción |
+| --- | --- | --- | --- |
+| `id` | TEXT | No | UUID, clave primaria |
+| `restaurant_id` | TEXT | No | FK → `restaurants.id` |
+| `code` | TEXT | No | Código en mayúsculas |
+| `type` | TEXT | No | `percent` (porcentaje) o `fixed` (euros) |
+| `value` | REAL | No | Porcentaje (1-100) o importe en euros |
+| `active` | INTEGER | No | 1 por defecto |
+| `expires_at` | TEXT | Sí | Fecha de caducidad |
+| `max_uses` | INTEGER | Sí | Usos máximos; sin límite si es nulo |
+| `used_count` | INTEGER | No | Veces usado, 0 por defecto |
+
+**Restricciones:** `UNIQUE(restaurant_id, code)`.
+
+---
+
+### `points_rules`
+
+Tramos que el admin define para canjear puntos por descuento (p. ej. 10 puntos = 1 €).
+
+| Columna | Tipo | Nullable | Descripción |
+| --- | --- | --- | --- |
+| `id` | TEXT | No | UUID, clave primaria |
+| `restaurant_id` | TEXT | No | FK → `restaurants.id` |
+| `points` | INTEGER | No | Puntos que se canjean |
+| `discount_amount` | REAL | No | Descuento en euros |
+
+**Restricciones:** `UNIQUE(restaurant_id, points)`.
+
+---
+
+### `customer_points`
+
+Saldo de puntos de un cliente en un restaurante.
+
+| Columna | Tipo | Nullable | Descripción |
+| --- | --- | --- | --- |
+| `client_id` | TEXT | No | FK → `employees.id` (rol `cliente`) |
+| `restaurant_id` | TEXT | No | FK → `restaurants.id` |
+| `balance` | INTEGER | No | Puntos disponibles, 0 por defecto |
+
+**Restricciones:** clave primaria compuesta `(client_id, restaurant_id)`. Los puntos solo se descuentan al canjear; no existe todavía una regla de acumulación (el seed asigna saldo inicial).
+
+---
+
+### `bills`
+
+Cuenta de un pedido, con el total congelado en el momento de pedirla.
+
+| Columna | Tipo | Nullable | Descripción |
+| --- | --- | --- | --- |
+| `order_id` | TEXT | No | FK → `orders.id`, clave primaria (una cuenta por pedido) |
+| `subtotal` | REAL | No | Suma de precios de los platos |
+| `discount_code` | TEXT | Sí | Código aplicado |
+| `code_discount` | REAL | No | Descuento del código |
+| `points_used` | INTEGER | No | Puntos canjeados |
+| `points_discount` | REAL | No | Descuento por puntos |
+| `total` | REAL | No | `subtotal - code_discount - points_discount`, nunca negativo |
+| `created_at` | TEXT | No | Fecha de la solicitud |
+
+**Restricciones:** ON DELETE CASCADE desde `orders.id`.
+
+---
+
 ## Relaciones
 
 | Relación | Tipo | Descripción |
@@ -264,6 +373,10 @@ Líneas de pedido. Cada ítem es un plato con cantidad y estado.
 | Dish ↔ Ingredient | N:M | Un plato usa varios ingredientes (via `dish_ingredients`) |
 | Order → OrderItems | 1:N | Un pedido tiene varios ítems |
 | Dish → OrderItems | 1:N | Un plato puede estar en varios ítems de pedido |
+| Restaurant → DiscountCodes | 1:N | Un restaurante ofrece varios códigos de descuento |
+| Restaurant → PointsRules | 1:N | Un restaurante define varios tramos de puntos |
+| Client × Restaurant → CustomerPoints | 1:1 | Saldo de puntos de un cliente en un restaurante |
+| Order → Bill | 1:0..1 | Un pedido tiene como máximo una cuenta |
 
 ---
 
