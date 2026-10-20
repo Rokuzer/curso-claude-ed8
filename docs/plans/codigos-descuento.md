@@ -23,7 +23,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T4 — Repositorio de códigos de descuento + mock** (~10 min)
   - Archivos: `packages/api/src/repositories/discount.repository.ts`, `packages/api/src/repositories/mocks/MockDiscountRepository.ts`
   - Detalle: interfaz y `SqliteDiscountRepository` (`findByRestaurant`, `findById`, `findByCode(restaurantId, code)`, `save`, `update`, `delete`, `incrementUsed`) más su mock en memoria.
-- [ ] **T5 — Repositorios de reglas de puntos, saldo y cuentas + mocks** (~10 min)
+- [x] **T5 — Repositorios de reglas de puntos, saldo y cuentas + mocks** (~10 min)
   - Archivos: `packages/api/src/repositories/points.repository.ts`, `packages/api/src/repositories/bill.repository.ts`, `packages/api/src/repositories/mocks/MockPointsRepository.ts`, `packages/api/src/repositories/mocks/MockBillRepository.ts`
   - Detalle: reglas (`findRulesByRestaurant`, `saveRule`, `deleteRule`), saldo (`getBalance`, `setBalance`) y cuentas (`findByOrderId`, `save`). Todo el SQL queda solo aquí.
 - [ ] **T6 — Servicio de códigos de descuento (CRUD)** (~10 min)
