@@ -17,7 +17,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T2 — Errores de dominio** (~5 min)
   - Archivos: `packages/api/src/errors/DomainErrors.ts`
   - Detalle: añadir `DiscountCodeNotFoundError` (404), `DiscountCodeInvalidError` (400: inactivo, caducado, agotado), `DuplicateDiscountCodeError` (409), `InsufficientPointsError` (400), `PointsRuleNotFoundError` (404) y `BillAlreadyRequestedError` (409), siguiendo el formato de los existentes.
-- [ ] **T3 — Tablas SQLite** (~8 min)
+- [x] **T3 — Tablas SQLite** (~8 min)
   - Archivos: `packages/api/src/config/database.ts`
   - Detalle: `CREATE TABLE IF NOT EXISTS` para `discount_codes` (`UNIQUE(restaurant_id, code)`), `points_rules`, `customer_points` (`client_id`, `restaurant_id`, `balance`, PK compuesta) y `bills` (`order_id` PK, FK a `orders`). FKs a `restaurants`/`employees`. Cuidar el `;` entre bloques del array.
 - [ ] **T4 — Repositorio de códigos de descuento + mock** (~10 min)

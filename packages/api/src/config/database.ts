@@ -176,6 +176,50 @@ export class Database {
                 status TEXT NOT NULL,
                 FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE,
                 FOREIGN KEY(dish_id) REFERENCES dishes(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS discount_codes (
+                id TEXT PRIMARY KEY,
+                restaurant_id TEXT NOT NULL,
+                code TEXT NOT NULL,
+                type TEXT NOT NULL,
+                value REAL NOT NULL,
+                active INTEGER NOT NULL DEFAULT 1,
+                expires_at TEXT,
+                max_uses INTEGER,
+                used_count INTEGER NOT NULL DEFAULT 0,
+                UNIQUE(restaurant_id, code),
+                FOREIGN KEY(restaurant_id) REFERENCES restaurants(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS points_rules (
+                id TEXT PRIMARY KEY,
+                restaurant_id TEXT NOT NULL,
+                points INTEGER NOT NULL,
+                discount_amount REAL NOT NULL,
+                UNIQUE(restaurant_id, points),
+                FOREIGN KEY(restaurant_id) REFERENCES restaurants(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS customer_points (
+                client_id TEXT NOT NULL,
+                restaurant_id TEXT NOT NULL,
+                balance INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY(client_id, restaurant_id),
+                FOREIGN KEY(client_id) REFERENCES employees(id),
+                FOREIGN KEY(restaurant_id) REFERENCES restaurants(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS bills (
+                order_id TEXT PRIMARY KEY,
+                subtotal REAL NOT NULL,
+                discount_code TEXT,
+                code_discount REAL NOT NULL DEFAULT 0,
+                points_used INTEGER NOT NULL DEFAULT 0,
+                points_discount REAL NOT NULL DEFAULT 0,
+                total REAL NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE
             )
         `.split(';')
 
