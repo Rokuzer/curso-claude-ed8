@@ -77,7 +77,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T22 — web-clientes: modelo y servicio de cuenta** (~8 min)
   - Archivos: `packages/web-clientes/src/app/core/models/bill.model.ts`, `packages/web-clientes/src/app/core/services/bill.service.ts`
   - Detalle: interfaces `Bill`, `PointsRule`, `BillRequest`; servicio con `requestBill(orderId, body)`, `getBill(orderId)`, `getPointsRules(restaurantId)` y `getMyPoints(restaurantId)`. Centralizado en `core/` como el resto de la app.
-- [ ] **T23 — web-clientes: UI "Pedir la cuenta" en el detalle del pedido** (~10 min)
+- [x] **T23 — web-clientes: UI "Pedir la cuenta" en el detalle del pedido** (~10 min)
   - Archivos: `packages/web-clientes/src/app/features/orders/order-detail.component.ts`
   - Detalle: junto a `.ticket-total`, botón "Pedir la cuenta" con campo de código + selector de tramo de puntos (solo tramos ≤ saldo), mensajes de error de la API en español, y tras solicitarla mostrar desglose subtotal / descuento / puntos / total a partir de la respuesta del backend (no del cálculo cliente). Verificar con `npm run build -w @resttek/web-clientes`.
 
