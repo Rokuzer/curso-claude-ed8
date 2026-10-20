@@ -68,7 +68,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T19 — web-admin: páginas de lista y formulario de códigos** (~10 min)
   - Archivos: `.../features/discounts/pages/discount-list/`, `.../pages/discount-form/`, `.../features/discounts/discounts.routes.ts`
   - Detalle: lista con borrado confirmado y formulario con `FormsModule`/`ngModel` (tipo, valor, activo, caducidad, usos máximos), como `mesa-list`/`mesa-form`; `DISCOUNT_ROUTES` con `''`, `'new'`, `':id/edit'`.
-- [ ] **T20 — web-admin: página de tramos puntos→descuento** (~8 min)
+- [x] **T20 — web-admin: página de tramos puntos→descuento** (~8 min)
   - Archivos: `.../features/discounts/pages/points-rules/`
   - Detalle: tabla editable de tramos (puntos → euros de descuento) con alta y borrado, usando el store de T18.
 - [ ] **T21 — web-admin: ruta y menú "Descuentos"** (~5 min)

@@ -10,6 +10,10 @@ export const DISCOUNT_ROUTES: Routes = [
     loadComponent: () => import('./pages/discount-form/discount-form.component').then(m => m.DiscountFormComponent)
   },
   {
+    path: 'points',
+    loadComponent: () => import('./pages/points-rules/points-rules.component').then(m => m.PointsRulesComponent)
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./pages/discount-form/discount-form.component').then(m => m.DiscountFormComponent)
   }
