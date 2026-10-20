@@ -5,6 +5,7 @@ import { LucideAngularModule } from 'lucide-angular'
 import { DishService } from '../../core/services/dish.service'
 import { RestaurantService } from '../../core/services/restaurant.service'
 import { CartStore, Dish } from '../../core/store/cart.store'
+import { TableSessionStore } from '../../core/store/table-session.store'
 import { Restaurant } from '../../core/models/restaurant.model'
 
 @Component({
@@ -17,6 +18,9 @@ import { Restaurant } from '../../core/models/restaurant.model'
         <div>
           <a routerLink="/restaurants" class="back-link">← Volver a restaurantes</a>
           <h1>{{ restaurant()?.name || 'Cargando...' }}</h1>
+          @if (tableSession.session(); as s) {
+            <p class="table-info">Mesa {{ s.table.number }} · {{ s.partySize }} personas</p>
+          }
         </div>
       </div>
 
@@ -87,6 +91,11 @@ import { Restaurant } from '../../core/models/restaurant.model'
     .container {
       max-width: 1200px;
       margin: 0 auto;
+    }
+    .table-info {
+      color: var(--green-light);
+      font-size: 14px;
+      margin-top: 4px;
     }
     .back-link {
       font-size: 13px;
@@ -212,6 +221,7 @@ export class RestaurantMenuComponent implements OnInit {
   private readonly dishService = inject(DishService)
   private readonly restaurantService = inject(RestaurantService)
   readonly cartStore = inject(CartStore)
+  readonly tableSession = inject(TableSessionStore)
 
   readonly restaurant = signal<Restaurant | null>(null)
   readonly dishes = signal<Dish[]>([])

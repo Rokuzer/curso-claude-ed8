@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router'
 import { DecimalPipe } from '@angular/common'
 import { CartStore } from '../../core/store/cart.store'
 import { OrderService } from '../../core/services/order.service'
+import { TableSessionStore } from '../../core/store/table-session.store'
 
 @Component({
   selector: 'app-cart',
@@ -171,6 +172,7 @@ import { OrderService } from '../../core/services/order.service'
 export class CartComponent {
   readonly cartStore = inject(CartStore)
   private readonly orderService = inject(OrderService)
+  private readonly tableSession = inject(TableSessionStore)
   private readonly router = inject(Router)
 
   readonly loading = signal(false)
@@ -197,6 +199,10 @@ export class CartComponent {
   confirmOrder(): void {
     const restaurantId = this.cartStore.restaurantId()
     if (!restaurantId || this.cartStore.items().length === 0) return
+    if (!this.tableSession.hasTableFor(restaurantId)) {
+      this.router.navigate(['/restaurants', restaurantId])
+      return
+    }
 
     this.loading.set(true)
     this.error.set(null)
@@ -207,7 +213,7 @@ export class CartComponent {
       notes: item.notes || null
     }))
 
-    this.orderService.createOrder(restaurantId, items).subscribe({
+    this.orderService.createOrder(restaurantId, this.tableSession.session()?.table.id ?? null, items).subscribe({
       next: (order) => {
         this.cartStore.clear()
         this.router.navigate(['/orders', order.id])

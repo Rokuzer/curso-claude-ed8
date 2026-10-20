@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent, RegisterComponent, authGuard } from '@resttek/web-shared';
+import { tableSessionGuard } from './core/guards/table-session.guard'
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,11 @@ export const routes: Routes = [
       },
       {
         path: 'restaurants/:id',
+        loadComponent: () => import('./features/tables/table-selection.component').then(m => m.TableSelectionComponent)
+      },
+      {
+        path: 'restaurants/:id/menu',
+        canActivate: [tableSessionGuard],
         loadComponent: () => import('./features/menu/restaurant-menu.component').then(m => m.RestaurantMenuComponent)
       },
       {
