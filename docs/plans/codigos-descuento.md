@@ -47,7 +47,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T12 — Rutas y montaje en `app.ts`** (~10 min)
   - Archivos: `packages/api/src/routes/discount.routes.ts`, `packages/api/src/routes/points.routes.ts`, `packages/api/src/routes/order.routes.ts`, `packages/api/src/app.ts`
   - Detalle: montar `/api/v1/restaurants/:restaurantId/discounts` (escritura `authorize(['admin'])`, lectura `admin`/`manager`), `/api/v1/restaurants/:restaurantId/points-rules` (escritura `admin`; `GET` también `cliente` para ver tramos) y `/api/v1/restaurants/:restaurantId/points/me` (`cliente`); añadir `POST/GET /orders/:id/bill` con `authorize(['cliente'])`. Cableado Sqlite como en `table.routes.ts` con `Router({ mergeParams: true })`.
-- [ ] **T13 — Tests de rutas** (~10 min)
+- [x] **T13 — Tests de rutas** (~10 min)
   - Archivos: `packages/api/src/routes/discount.routes.test.ts`, `packages/api/src/routes/bill.routes.test.ts`
   - Detalle: supertest como en `table.routes.test.ts` (BD `:memory:`, insertar primero filas padre): 403 para camarero en `POST /discounts`, 401 sin token, 201 al crear, 409 código duplicado, `POST /orders/:id/bill` con código válido y con código inválido (400).
 - [ ] **T14 — Seed** (~5 min)
