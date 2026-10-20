@@ -62,7 +62,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T17 — Actualizar documentación de `docs/`** (~8 min)
   - Archivos: `docs/arquitectura/arquitectura-api.md`, `docs/dominio/modelo-datos.md`, `docs/dominio/glosario.md`
   - Detalle: endpoints nuevos (sección Endpoints) y dominios por capas; ER y tablas `discount_codes`, `points_rules`, `customer_points`, `bills`; glosario: código de descuento, puntos, regla de puntos, cuenta.
-- [ ] **T18 — web-admin: modelo, servicio y store de descuentos** (~10 min)
+- [x] **T18 — web-admin: modelo, servicio y store de descuentos** (~10 min)
   - Archivos: `packages/web-admin/src/app/features/discounts/models/discount.model.ts`, `.../services/discount.service.ts`, `.../store/discount.store.ts`
   - Detalle: copiar el patrón de `features/mesas/` (signals privados con `asReadonly()`, `firstValueFrom`, `DISCOUNT_ERROR_MESSAGES` y `discountErrorMessage`). Servicio contra `${environment.apiUrl}/restaurants/${restaurantId}/discounts`; incluir también las llamadas a `points-rules`.
 - [ ] **T19 — web-admin: páginas de lista y formulario de códigos** (~10 min)
