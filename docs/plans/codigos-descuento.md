@@ -41,7 +41,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T10 — Tests del servicio de cuenta** (~10 min)
   - Archivos: `packages/api/src/services/bill.service.test.ts`
   - Detalle: sin descuentos, código `percent`, código `fixed`, código caducado/agotado/inexistente, canje con saldo suficiente e insuficiente, código + puntos, total nunca negativo, segunda solicitud (409), pedido ajeno.
-- [ ] **T11 — Controllers** (~10 min)
+- [x] **T11 — Controllers** (~10 min)
   - Archivos: `packages/api/src/controllers/discount.controller.ts`, `packages/api/src/controllers/points.controller.ts`, `packages/api/src/controllers/bill.controller.ts`
   - Detalle: arrow-functions con `toJSON` y `next(error)` como `table.controller.ts`. Bill: `POST` (201) y `GET`. Points: reglas y `GET` del saldo propio.
 - [ ] **T12 — Rutas y montaje en `app.ts`** (~10 min)
