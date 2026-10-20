@@ -26,7 +26,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T5 — Repositorios de reglas de puntos, saldo y cuentas + mocks** (~10 min)
   - Archivos: `packages/api/src/repositories/points.repository.ts`, `packages/api/src/repositories/bill.repository.ts`, `packages/api/src/repositories/mocks/MockPointsRepository.ts`, `packages/api/src/repositories/mocks/MockBillRepository.ts`
   - Detalle: reglas (`findRulesByRestaurant`, `saveRule`, `deleteRule`), saldo (`getBalance`, `setBalance`) y cuentas (`findByOrderId`, `save`). Todo el SQL queda solo aquí.
-- [ ] **T6 — Servicio de códigos de descuento (CRUD)** (~10 min)
+- [x] **T6 — Servicio de códigos de descuento (CRUD)** (~10 min)
   - Archivos: `packages/api/src/services/discount.service.ts`
   - Detalle: `create`/`update`/`delete`/`list`/`getById` con `ensureRestaurantExists`, validación (`code` no vacío y único por restaurante, `value > 0`, `percent` ≤ 100, `expiresAt` válida) y `randomUUID()`.
 - [ ] **T7 — Tests del servicio de códigos** (~8 min)
