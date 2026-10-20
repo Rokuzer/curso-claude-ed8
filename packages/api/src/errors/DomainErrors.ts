@@ -228,3 +228,9 @@ export class TableNotOccupiedError extends AppError {
     super('Table is not occupied')
   }
 }
+
+export class InvalidDiscountTypeError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Invalid discount type')
+  }
+}

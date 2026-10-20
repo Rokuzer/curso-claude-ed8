@@ -11,7 +11,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 
 > Cada tarea debe poder completarse en 5-10 minutos. Ordénalas por dependencia y respeta la arquitectura de la zona (`routes → controllers → services → repositories → models`, o hexagonal en `contexts/employee/`).
 
-- [ ] **T1 — Modelos de descuento, regla de puntos y cuenta** (~8 min)
+- [x] **T1 — Modelos de descuento, regla de puntos y cuenta** (~8 min)
   - Archivos: `packages/api/src/models/discount.model.ts`, `packages/api/src/models/bill.model.ts`
   - Detalle: definir `DiscountCode` (`id`, `restaurantId`, `code`, `type: 'percent' | 'fixed'`, `value`, `active`, `expiresAt?`, `maxUses?`, `usedCount`), `PointsRule` (`id`, `restaurantId`, `points`, `discountAmount`) y `Bill` (`orderId`, `subtotal`, `discountCode?`, `codeDiscount`, `pointsUsed`, `pointsDiscount`, `total`, `createdAt`), con `toJSON` como en `table.model.ts`. Respetar `exactOptionalPropertyTypes`.
 - [ ] **T2 — Errores de dominio** (~5 min)
