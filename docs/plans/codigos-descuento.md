@@ -20,7 +20,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T3 — Tablas SQLite** (~8 min)
   - Archivos: `packages/api/src/config/database.ts`
   - Detalle: `CREATE TABLE IF NOT EXISTS` para `discount_codes` (`UNIQUE(restaurant_id, code)`), `points_rules`, `customer_points` (`client_id`, `restaurant_id`, `balance`, PK compuesta) y `bills` (`order_id` PK, FK a `orders`). FKs a `restaurants`/`employees`. Cuidar el `;` entre bloques del array.
-- [ ] **T4 — Repositorio de códigos de descuento + mock** (~10 min)
+- [x] **T4 — Repositorio de códigos de descuento + mock** (~10 min)
   - Archivos: `packages/api/src/repositories/discount.repository.ts`, `packages/api/src/repositories/mocks/MockDiscountRepository.ts`
   - Detalle: interfaz y `SqliteDiscountRepository` (`findByRestaurant`, `findById`, `findByCode(restaurantId, code)`, `save`, `update`, `delete`, `incrementUsed`) más su mock en memoria.
 - [ ] **T5 — Repositorios de reglas de puntos, saldo y cuentas + mocks** (~10 min)
