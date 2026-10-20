@@ -22,6 +22,8 @@ tags:
   - name: Ingredientes
   - name: Platos
   - name: Mesas
+  - name: Descuentos
+    description: Códigos de descuento, tramos de puntos y cuenta de un pedido
   - name: Pedidos
   - name: Público
     description: Endpoints sin autenticación
@@ -1105,6 +1107,333 @@ paths:
         '404':
           $ref: '#/components/responses/RestaurantNotFound'
 
+  /api/v1/restaurants/{restaurantId}/discounts:
+    get:
+      tags: [Descuentos]
+      summary: Listar los códigos de descuento
+      description: Roles `admin`, `manager`. Ordenados por `code`.
+      operationId: listDiscountCodes
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Códigos del restaurante
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DiscountCode'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+    post:
+      tags: [Descuentos]
+      summary: Crear un código de descuento
+      description: Rol `admin`. El `code` se normaliza a mayúsculas y es único por restaurante.
+      operationId: createDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountCodeInput'
+      responses:
+        '201':
+          description: Código creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountCode'
+        '400':
+          $ref: '#/components/responses/DiscountDomainError400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+        '409':
+          $ref: '#/components/responses/DuplicatedDiscountCode'
+
+  /api/v1/restaurants/{restaurantId}/discounts/{id}:
+    get:
+      tags: [Descuentos]
+      summary: Obtener un código de descuento
+      description: Roles `admin`, `manager`.
+      operationId: getDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Código de descuento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountCode'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DiscountCodeNotFound'
+    put:
+      tags: [Descuentos]
+      summary: Actualizar un código de descuento
+      description: Rol `admin`. Sustituye todos los campos; `usedCount` se conserva.
+      operationId: updateDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountCodeInput'
+      responses:
+        '200':
+          description: Código actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountCode'
+        '400':
+          $ref: '#/components/responses/DiscountDomainError400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DiscountCodeNotFound'
+        '409':
+          $ref: '#/components/responses/DuplicatedDiscountCode'
+    delete:
+      tags: [Descuentos]
+      summary: Eliminar un código de descuento
+      description: Rol `admin`.
+      operationId: deleteDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: Código eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/DiscountCodeNotFound'
+
+  /api/v1/restaurants/{restaurantId}/points-rules:
+    get:
+      tags: [Descuentos]
+      summary: Listar los tramos de puntos
+      description: Roles `admin`, `manager`, `cliente`. Ordenados por `points` ascendente.
+      operationId: listPointsRules
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Tramos del restaurante
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PointsRule'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+    post:
+      tags: [Descuentos]
+      summary: Crear un tramo de puntos
+      description: Rol `admin`. Relaciona una cantidad de puntos con un descuento en euros (p. ej. 10 puntos = 1 €). `points` es único por restaurante.
+      operationId: createPointsRule
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointsRuleInput'
+      responses:
+        '201':
+          description: Tramo creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointsRule'
+        '400':
+          $ref: '#/components/responses/PointsRuleDomainError400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+        '409':
+          $ref: '#/components/responses/DuplicatedPointsRule'
+
+  /api/v1/restaurants/{restaurantId}/points-rules/{id}:
+    put:
+      tags: [Descuentos]
+      summary: Actualizar un tramo de puntos
+      description: Rol `admin`.
+      operationId: updatePointsRule
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointsRuleInput'
+      responses:
+        '200':
+          description: Tramo actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointsRule'
+        '400':
+          $ref: '#/components/responses/PointsRuleDomainError400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/PointsRuleNotFound'
+        '409':
+          $ref: '#/components/responses/DuplicatedPointsRule'
+    delete:
+      tags: [Descuentos]
+      summary: Eliminar un tramo de puntos
+      description: Rol `admin`.
+      operationId: deletePointsRule
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: Tramo eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/PointsRuleNotFound'
+
+  /api/v1/restaurants/{restaurantId}/points/me:
+    get:
+      tags: [Descuentos]
+      summary: Consultar mi saldo de puntos
+      description: Rol `cliente`. Devuelve 0 si el cliente no tiene puntos en el restaurante.
+      operationId: getMyPoints
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RestaurantId'
+      responses:
+        '200':
+          description: Saldo de puntos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointsBalance'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/RestaurantNotFound'
+
+  /api/v1/orders/{id}/bill:
+    post:
+      tags: [Descuentos]
+      summary: Pedir la cuenta de un pedido
+      description: Rol `cliente`, solo sobre sus propios pedidos. Calcula `subtotal` desde los precios actuales de los platos, aplica el código y/o canjea un tramo de puntos (se descuentan del saldo) y guarda la cuenta. El total nunca es negativo.
+      operationId: requestBill
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillRequest'
+      responses:
+        '201':
+          description: Cuenta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          $ref: '#/components/responses/BillDomainError400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/BillOrderNotFound'
+        '409':
+          $ref: '#/components/responses/BillAlreadyRequested'
+    get:
+      tags: [Descuentos]
+      summary: Obtener la cuenta de un pedido
+      description: Rol `cliente`, solo sobre sus propios pedidos.
+      operationId: getBill
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Cuenta del pedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/BillOrderNotFound'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1178,6 +1507,61 @@ components:
             $ref: '#/components/schemas/DomainError'
     TableDomainError400:
       description: Datos inválidos (`InvalidTableNumberError`, `InvalidTableCapacityError`, `InvalidTableDescriptionError`, `InvalidTableStatusError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+
+    DiscountCodeNotFound:
+      description: Código de descuento no encontrado en ese restaurante (`DiscountCodeNotFoundError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    DuplicatedDiscountCode:
+      description: Ya existe un código igual en el restaurante (`DuplicatedDiscountCodeError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    DiscountDomainError400:
+      description: Datos inválidos (`DiscountCodeRequiredError`, `InvalidDiscountTypeError`, `InvalidDiscountValueError`, `InvalidDiscountExpirationError`, `InvalidDiscountMaxUsesError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    PointsRuleNotFound:
+      description: Tramo de puntos no encontrado en ese restaurante (`PointsRuleNotFoundError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    DuplicatedPointsRule:
+      description: Ya existe un tramo con esos `points` en el restaurante (`DuplicatedPointsRuleError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    PointsRuleDomainError400:
+      description: Datos inválidos (`InvalidPointsRuleError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    BillOrderNotFound:
+      description: Pedido inexistente o de otro cliente (`OrderNotFoundError`), pedido sin cuenta en `GET` (`BillNotFoundError`), o en `POST` código (`DiscountCodeNotFoundError`) o tramo (`PointsRuleNotFoundError`) inexistentes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    BillAlreadyRequested:
+      description: El pedido ya tiene cuenta (`BillAlreadyRequestedError`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainError'
+    BillDomainError400:
+      description: "Código no válido (`DiscountCodeInvalidError`, por inactivo, caducado o agotado) o saldo de puntos insuficiente (`InsufficientPointsError`)"
       content:
         application/json:
           schema:
@@ -1603,3 +1987,138 @@ components:
           type: string
           nullable: true
           description: Solo en las lecturas
+
+    DiscountType:
+      type: string
+      enum: [percent, fixed]
+      description: "`percent` = porcentaje (1-100) sobre el subtotal; `fixed` = importe fijo en euros."
+    DiscountCode:
+      type: object
+      required: [id, restaurantId, code, type, value, active, expiresAt, maxUses, usedCount]
+      properties:
+        id:
+          type: string
+          format: uuid
+        restaurantId:
+          type: string
+          format: uuid
+        code:
+          type: string
+          example: VERANO5
+        type:
+          $ref: '#/components/schemas/DiscountType'
+        value:
+          type: number
+          example: 5
+        active:
+          type: boolean
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        maxUses:
+          type: integer
+          nullable: true
+        usedCount:
+          type: integer
+    DiscountCodeInput:
+      type: object
+      required: [code, type, value]
+      properties:
+        code:
+          type: string
+          description: No vacío; se guarda en mayúsculas y sin espacios en los extremos.
+          example: verano5
+        type:
+          $ref: '#/components/schemas/DiscountType'
+        value:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+          maximum: 100
+          description: Mayor que 0. Si `type` es `percent`, máximo 100.
+        active:
+          type: boolean
+          default: true
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        maxUses:
+          type: integer
+          minimum: 1
+          nullable: true
+    PointsRule:
+      type: object
+      required: [id, restaurantId, points, discountAmount]
+      properties:
+        id:
+          type: string
+          format: uuid
+        restaurantId:
+          type: string
+          format: uuid
+        points:
+          type: integer
+          example: 10
+        discountAmount:
+          type: number
+          description: Descuento en euros que se obtiene al canjear `points`.
+          example: 1
+    PointsRuleInput:
+      type: object
+      required: [points, discountAmount]
+      properties:
+        points:
+          type: integer
+          minimum: 1
+        discountAmount:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+    PointsBalance:
+      type: object
+      required: [restaurantId, balance]
+      properties:
+        restaurantId:
+          type: string
+          format: uuid
+        balance:
+          type: integer
+          example: 150
+    BillRequest:
+      type: object
+      description: Ambos campos son opcionales y se pueden combinar.
+      properties:
+        discountCode:
+          type: string
+          example: BIENVENIDO10
+        pointsRuleId:
+          type: string
+          format: uuid
+          description: Id del tramo de puntos a canjear (`PointsRule.id`).
+    Bill:
+      type: object
+      required: [orderId, subtotal, discountCode, codeDiscount, pointsUsed, pointsDiscount, total, createdAt]
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        subtotal:
+          type: number
+          example: 20
+        discountCode:
+          type: string
+          nullable: true
+        codeDiscount:
+          type: number
+        pointsUsed:
+          type: integer
+        pointsDiscount:
+          type: number
+        total:
+          type: number
+          description: "`subtotal - codeDiscount - pointsDiscount`, nunca negativo."
+        createdAt:
+          type: string
+          format: date-time

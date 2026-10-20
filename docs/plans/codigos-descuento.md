@@ -53,7 +53,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T14 — Seed** (~5 min)
   - Archivos: `packages/api/src/scripts/seed.ts`
   - Detalle: `INSERT OR IGNORE` de un código (`BIENVENIDO10`, 10 % en `rest-1`), dos tramos (10 puntos = 1 €, 100 puntos = 10 €) y saldo de 150 puntos para `cliente@resttek.com` en `rest-1`, con ids deterministas.
-- [ ] **T15 — Actualizar openapi.yaml** (~10 min)
+- [x] **T15 — Actualizar openapi.yaml** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `tags` (añadir "Descuentos"), `paths` `/api/v1/restaurants/{restaurantId}/discounts`, `.../discounts/{id}`, `.../points-rules`, `.../points-rules/{id}`, `.../points/me` y `/api/v1/orders/{id}/bill` (POST y GET); `components.schemas` `DiscountCode`, `DiscountCodeInput`, `PointsRule`, `PointsRuleInput`, `Bill`, `BillRequest`; respuestas 400/401/403/404/409 y roles en la descripción. `operationId` únicos en camelCase, `$ref` a `components`, descripciones en español.
 - [ ] **T16 — Regenerar docs/api.html** (~5 min)
