@@ -56,7 +56,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T15 — Actualizar openapi.yaml** (~10 min)
   - Archivos: `packages/api/openapi.yaml`
   - Detalle: `tags` (añadir "Descuentos"), `paths` `/api/v1/restaurants/{restaurantId}/discounts`, `.../discounts/{id}`, `.../points-rules`, `.../points-rules/{id}`, `.../points/me` y `/api/v1/orders/{id}/bill` (POST y GET); `components.schemas` `DiscountCode`, `DiscountCodeInput`, `PointsRule`, `PointsRuleInput`, `Bill`, `BillRequest`; respuestas 400/401/403/404/409 y roles en la descripción. `operationId` únicos en camelCase, `$ref` a `components`, descripciones en español.
-- [ ] **T16 — Regenerar docs/api.html** (~5 min)
+- [x] **T16 — Regenerar docs/api.html** (~5 min)
   - Archivos: `packages/api/docs/api.html`
   - Detalle: ejecutar `npm run docs:api` desde la raíz; debe terminar sin errores.
 - [ ] **T17 — Actualizar documentación de `docs/`** (~8 min)
