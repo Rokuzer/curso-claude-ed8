@@ -38,7 +38,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T9 — Servicio de cuenta: cálculo y solicitud** (~10 min)
   - Archivos: `packages/api/src/services/bill.service.ts`
   - Detalle: `requestBill(orderId, clientId, { discountCode?, pointsRuleId? })`: verifica que el pedido es del cliente, que no tiene cuenta (`BillAlreadyRequestedError`), calcula `subtotal` desde `dishPrice`, valida el código (activo, no caducado, `usedCount < maxUses`), valida saldo contra la regla elegida, aplica ambos descuentos con `total >= 0`, descuenta puntos, incrementa `usedCount` y guarda la cuenta. `getBill(orderId)`.
-- [ ] **T10 — Tests del servicio de cuenta** (~10 min)
+- [x] **T10 — Tests del servicio de cuenta** (~10 min)
   - Archivos: `packages/api/src/services/bill.service.test.ts`
   - Detalle: sin descuentos, código `percent`, código `fixed`, código caducado/agotado/inexistente, canje con saldo suficiente e insuficiente, código + puntos, total nunca negativo, segunda solicitud (409), pedido ajeno.
 - [ ] **T11 — Controllers** (~10 min)
