@@ -35,7 +35,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T8 — Servicio de reglas de puntos** (~8 min)
   - Archivos: `packages/api/src/services/points.service.ts`, `packages/api/src/services/points.service.test.ts`
   - Detalle: CRUD de reglas (`points > 0`, `discountAmount > 0`, `points` único por restaurante) y `getBalance(clientId, restaurantId)`. Tests con mocks.
-- [ ] **T9 — Servicio de cuenta: cálculo y solicitud** (~10 min)
+- [x] **T9 — Servicio de cuenta: cálculo y solicitud** (~10 min)
   - Archivos: `packages/api/src/services/bill.service.ts`
   - Detalle: `requestBill(orderId, clientId, { discountCode?, pointsRuleId? })`: verifica que el pedido es del cliente, que no tiene cuenta (`BillAlreadyRequestedError`), calcula `subtotal` desde `dishPrice`, valida el código (activo, no caducado, `usedCount < maxUses`), valida saldo contra la regla elegida, aplica ambos descuentos con `total >= 0`, descuenta puntos, incrementa `usedCount` y guarda la cuenta. `getBill(orderId)`.
 - [ ] **T10 — Tests del servicio de cuenta** (~10 min)
