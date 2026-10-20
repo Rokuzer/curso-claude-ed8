@@ -11,7 +11,9 @@ erDiagram
     restaurants ||--o{ employees : "tiene"
     restaurants ||--o{ ingredients : "tiene"
     restaurants ||--o{ dishes : "tiene"
+    restaurants ||--o{ tables : "tiene"
     restaurants ||--o{ orders : "tiene"
+    tables ||--o{ orders : "recibe"
     dishes ||--o{ dish_ingredients : "contiene"
     ingredients ||--o{ dish_ingredients : "usado en"
     orders ||--o{ order_items : "contiene"
@@ -66,6 +68,17 @@ erDiagram
         TEXT dish_id PK_FK
         TEXT ingredient_id PK_FK
         REAL quantity
+    }
+
+    tables {
+        TEXT id PK
+        TEXT restaurant_id FK
+        INTEGER number
+        TEXT description
+        INTEGER capacity
+        TEXT status
+        TEXT occupied_at
+        TEXT occupied_by
     }
 
     orders {
@@ -182,6 +195,29 @@ Relación muchos-a-muchos entre platos e ingredientes.
 
 ---
 
+### `tables`
+
+Mesas de un restaurante.
+
+| Columna | Tipo | Nullable | Descripción |
+| --- | --- | --- | --- |
+| `id` | TEXT | No | UUID, clave primaria |
+| `restaurant_id` | TEXT | No | FK → `restaurants.id` |
+| `number` | INTEGER | No | Número de mesa (entero >= 1) |
+| `description` | TEXT | Sí | Descripción (máx. 200 caracteres) |
+| `capacity` | INTEGER | No | Número de comensales (entero >= 1) |
+| `status` | TEXT | No | Estado: libre, ocupada, reservada (por defecto libre) |
+| `occupied_at` | TEXT | Sí | Instante en que pasó a `ocupada`; null en otros estados |
+| `occupied_by` | TEXT | Sí | ID del cliente que la ocupó vía `/occupy`; null si la ocupó un empleado |
+
+**Restricciones:**
+
+- `UNIQUE(restaurant_id, number)`.
+- Ocupar una mesa es atómico (`UPDATE ... WHERE status = 'libre'`).
+- Los pedidos de la ocupación actual son los de `orders.table_id` con `created_at >= occupied_at`.
+
+---
+
 ### `orders`
 
 Pedidos de los clientes.
@@ -190,7 +226,7 @@ Pedidos de los clientes.
 | --- | --- | --- | --- |
 | `id` | TEXT | No | UUID, clave primaria |
 | `restaurant_id` | TEXT | No | FK → `restaurants.id` |
-| `table_id` | TEXT | Sí | Identificador de mesa (opcional) |
+| `table_id` | TEXT | Sí | Referencia lógica a `tables.id` (opcional; sin FK en BD, validada en `OrderService`: la mesa debe ser del restaurante y estar `ocupada`) |
 | `client_id` | TEXT | Sí | ID del cliente (opcional) |
 | `created_at` | TEXT | No | Fecha de creación |
 
@@ -222,7 +258,9 @@ Líneas de pedido. Cada ítem es un plato con cantidad y estado.
 | Restaurant → Employees | 1:N | Un restaurante tiene muchos empleados |
 | Restaurant → Ingredients | 1:N | Un restaurante tiene muchos ingredientes |
 | Restaurant → Dishes | 1:N | Un restaurante tiene muchos platos |
+| Restaurant → Tables | 1:N | Un restaurante tiene muchas mesas |
 | Restaurant → Orders | 1:N | Un restaurante tiene muchos pedidos |
+| Table → Orders | 1:N | Una mesa recibe pedidos (`orders.table_id`) |
 | Dish ↔ Ingredient | N:M | Un plato usa varios ingredientes (via `dish_ingredients`) |
 | Order → OrderItems | 1:N | Un pedido tiene varios ítems |
 | Dish → OrderItems | 1:N | Un plato puede estar en varios ítems de pedido |

@@ -51,7 +51,7 @@ contexts/employee/
 
 `contexts/shared/` no es un bounded context de negocio: contiene el value object `Email` y los middlewares y el `errorHandler` de Express.
 
-### 2. Por capas → `restaurant`, `dish`, `ingredient`, `order`
+### 2. Por capas → `restaurant`, `dish`, `ingredient`, `order`, `table`
 
 El resto de dominios **no** usan bounded contexts. Se organizan en carpetas transversales por tipo de fichero:
 
@@ -121,6 +121,7 @@ Los demás conceptos que podrían ser Value Objects **no están implementados co
 | --- | --- | --- |
 | Unidad de ingrediente | `normalizeIngredientUnit()` en `models/ingredient.model.ts` | kg, g, l, ml, unidad |
 | Categoría de plato | `normalizeDishCategory()` en `models/dish.model.ts` | entrante, principal, postre, bebida |
+| Estado de mesa | `normalizeTableStatus()` en `models/table.model.ts` | libre, ocupada, reservada |
 | Estado de pedido | `normalizeOrderStatus()` en `models/order.model.ts` | pendiente, preparando, listo, entregado |
 | Teléfono | `PHONE_REGEX` dentro de `services/restaurant.service.ts` | `/^\+?[\d\s\-()]{7,20}$/` |
 
@@ -309,6 +310,22 @@ Todos cuelgan de `/api/v1`. La columna **Roles** indica qué valores de `req.use
 | `DELETE` | `/api/v1/restaurants/:restaurantId/ingredients/:id` | admin |
 
 Los ingredientes son **más restrictivos** que los platos: solo `admin` puede crear, editar o borrar.
+
+### Mesas
+
+| Método | Ruta | Roles |
+| --- | --- | --- |
+| `GET` | `/api/v1/public/restaurants/:restaurantId/tables?partySize=N` | Mesas libres con capacidad suficiente (público) |
+| `POST` | `/api/v1/restaurants/:restaurantId/tables` | admin, manager |
+| `GET` | `/api/v1/restaurants/:restaurantId/tables` | admin, manager, camarero, cocinero (filtro `?status=`) |
+| `GET` | `/api/v1/restaurants/:restaurantId/tables/:id` | admin, manager, camarero, cocinero |
+| `PUT` | `/api/v1/restaurants/:restaurantId/tables/:id` | admin, manager |
+| `DELETE` | `/api/v1/restaurants/:restaurantId/tables/:id` | admin, manager (409 si está ocupada) |
+| `PATCH` | `/api/v1/restaurants/:restaurantId/tables/:id/status` | admin, manager, camarero, cocinero |
+| `GET` | `/api/v1/restaurants/:restaurantId/tables/:id/orders` | admin, manager, camarero, cocinero |
+| `POST` | `/api/v1/restaurants/:restaurantId/tables/:id/occupy` | cliente (409 si ya no está libre) |
+
+El cliente ocupa una mesa con `/occupy` (atómico: solo una petición gana, el resto recibe 409). Los pedidos de una mesa son los creados desde su `occupied_at`.
 
 ### Pedidos
 
