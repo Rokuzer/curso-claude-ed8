@@ -178,6 +178,28 @@ const seed = async () => {
 
         console.log('Tables created: 5 for restaurant 1, 3 for restaurant 2')
 
+        await dbConfig.run(`
+            INSERT OR IGNORE INTO discount_codes (id, restaurant_id, code, type, value, active, expires_at, max_uses, used_count)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, ['rest-1-discount-bienvenido10', 'rest-1', 'BIENVENIDO10', 'percent', 10, 1, null, null, 0])
+
+        for (const rule of [{ points: 10, amount: 1 }, { points: 100, amount: 10 }]) {
+            await dbConfig.run(`
+                INSERT OR IGNORE INTO points_rules (id, restaurant_id, points, discount_amount)
+                VALUES (?, ?, ?, ?)
+            `, [`rest-1-points-${rule.points}`, 'rest-1', rule.points, rule.amount])
+        }
+
+        const pointsClient = await dbConfig.get<{ id: string }>('SELECT id FROM employees WHERE email = ?', ['cliente1@resttek.com'])
+        if (pointsClient) {
+            await dbConfig.run(`
+                INSERT OR IGNORE INTO customer_points (client_id, restaurant_id, balance)
+                VALUES (?, ?, ?)
+            `, [pointsClient.id, 'rest-1', 150])
+        }
+
+        console.log('Discounts created: code BIENVENIDO10, points rules (10 = 1 EUR, 100 = 10 EUR) and 150 points for cliente1@resttek.com')
+
         const order1Id = randomUUID()
         await dbConfig.run(`
             INSERT OR IGNORE INTO orders (id, restaurant_id, table_id, client_id, created_at)

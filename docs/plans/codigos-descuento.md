@@ -50,7 +50,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T13 — Tests de rutas** (~10 min)
   - Archivos: `packages/api/src/routes/discount.routes.test.ts`, `packages/api/src/routes/bill.routes.test.ts`
   - Detalle: supertest como en `table.routes.test.ts` (BD `:memory:`, insertar primero filas padre): 403 para camarero en `POST /discounts`, 401 sin token, 201 al crear, 409 código duplicado, `POST /orders/:id/bill` con código válido y con código inválido (400).
-- [ ] **T14 — Seed** (~5 min)
+- [x] **T14 — Seed** (~5 min)
   - Archivos: `packages/api/src/scripts/seed.ts`
   - Detalle: `INSERT OR IGNORE` de un código (`BIENVENIDO10`, 10 % en `rest-1`), dos tramos (10 puntos = 1 €, 100 puntos = 10 €) y saldo de 150 puntos para `cliente@resttek.com` en `rest-1`, con ids deterministas.
 - [ ] **T15 — Actualizar openapi.yaml** (~10 min)
