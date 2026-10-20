@@ -83,15 +83,15 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 
 ## Criterios de aceptación
 
-- [ ] `POST /api/v1/restaurants/rest-1/discounts` con token de admin y `{ code: "VERANO5", type: "fixed", value: 5 }` devuelve 201; repetir el mismo `code` devuelve 409; con token de camarero devuelve 403 y sin token 401.
-- [ ] `GET/PUT/DELETE /api/v1/restaurants/rest-1/discounts/{id}` funcionan para admin y devuelven 404 para un id inexistente.
-- [ ] Un admin puede crear `points-rules` (`10 puntos → 1 €`, `100 puntos → 10 €`); `points = 0` devuelve 400.
-- [ ] `POST /api/v1/orders/{id}/bill` con `{ discountCode: "BIENVENIDO10" }` devuelve 201 con `subtotal`, `codeDiscount` = 10 % del subtotal y `total` correcto; un código inexistente, caducado o agotado devuelve 4xx con mensaje de error y no crea la cuenta.
-- [ ] Con `pointsRuleId` del tramo de 100 puntos, el saldo del cliente baja 100 y `pointsDiscount` = 10 €; con saldo insuficiente devuelve 400 y el saldo no cambia. `total` nunca es negativo.
-- [ ] Solicitar la cuenta de un pedido que ya la tiene devuelve 409; de un pedido ajeno, 403/404; con rol distinto de `cliente`, 403.
-- [ ] `npm test` pasa en `packages/api`, con tests nuevos de servicios (descuentos, puntos, cuenta) y rutas.
-- [ ] En web-admin, el menú del restaurante muestra "Descuentos" y permite crear, editar y borrar códigos y tramos; `npm run build -w @resttek/web-admin` termina sin errores.
-- [ ] En web-clientes, el detalle de un pedido permite aplicar un código y/o canjear un tramo y muestra el total devuelto por la API; `npm run build -w @resttek/web-clientes` termina sin errores.
-- [ ] `npm run docs:api` termina sin errores (OpenAPI 3 válido).
-- [ ] Cada endpoint nuevo (`/discounts`, `/discounts/{id}`, `/points-rules`, `/points-rules/{id}`, `/points/me`, `/orders/{id}/bill`) y los schemas `DiscountCode`, `PointsRule`, `Bill` aparecen en `packages/api/openapi.yaml`.
-- [ ] `packages/api/docs/api.html` está regenerado a partir del YAML final.
+- [x] `POST /api/v1/restaurants/rest-1/discounts` con token de admin y `{ code: "VERANO5", type: "fixed", value: 5 }` devuelve 201; repetir el mismo `code` devuelve 409; con token de camarero devuelve 403 y sin token 401.
+- [x] `GET/PUT/DELETE /api/v1/restaurants/rest-1/discounts/{id}` funcionan para admin y devuelven 404 para un id inexistente.
+- [x] Un admin puede crear `points-rules` (`10 puntos → 1 €`, `100 puntos → 10 €`); `points = 0` devuelve 400.
+- [x] `POST /api/v1/orders/{id}/bill` con `{ discountCode: "BIENVENIDO10" }` devuelve 201 con `subtotal`, `codeDiscount` = 10 % del subtotal y `total` correcto; un código inexistente, caducado o agotado devuelve 4xx con mensaje de error y no crea la cuenta.
+- [x] Con `pointsRuleId` del tramo de 100 puntos, el saldo del cliente baja 100 y `pointsDiscount` = 10 €; con saldo insuficiente devuelve 400 y el saldo no cambia. `total` nunca es negativo.
+- [x] Solicitar la cuenta de un pedido que ya la tiene devuelve 409; de un pedido ajeno, 403/404; con rol distinto de `cliente`, 403.
+- [x] `npm test` pasa en `packages/api`, con tests nuevos de servicios (descuentos, puntos, cuenta) y rutas.
+- [x] En web-admin, el menú del restaurante muestra "Descuentos" y permite crear, editar y borrar códigos y tramos; `npm run build -w @resttek/web-admin` termina sin errores.
+- [x] En web-clientes, el detalle de un pedido permite aplicar un código y/o canjear un tramo y muestra el total devuelto por la API; `npm run build -w @resttek/web-clientes` termina sin errores.
+- [x] `npm run docs:api` termina sin errores (OpenAPI 3 válido).
+- [x] Cada endpoint nuevo (`/discounts`, `/discounts/{id}`, `/points-rules`, `/points-rules/{id}`, `/points/me`, `/orders/{id}/bill`) y los schemas `DiscountCode`, `PointsRule`, `Bill` aparecen en `packages/api/openapi.yaml`.
+- [x] `packages/api/docs/api.html` está regenerado a partir del YAML final.
