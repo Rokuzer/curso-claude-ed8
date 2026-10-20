@@ -74,7 +74,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T21 — web-admin: ruta y menú "Descuentos"** (~5 min)
   - Archivos: `packages/web-admin/src/app/app.routes.ts`, `packages/web-admin/src/app/core/layout/shell.component.html`, `packages/web-admin/src/app/app.config.ts`
   - Detalle: bloque `{ path: 'discounts', loadChildren: ... DISCOUNT_ROUTES }` bajo `restaurants/:restaurantId`, entrada `.sub-nav-item` con icono `ticket` registrado en `app.config.ts`. Verificar con `npm run build -w @resttek/web-admin`.
-- [ ] **T22 — web-clientes: modelo y servicio de cuenta** (~8 min)
+- [x] **T22 — web-clientes: modelo y servicio de cuenta** (~8 min)
   - Archivos: `packages/web-clientes/src/app/core/models/bill.model.ts`, `packages/web-clientes/src/app/core/services/bill.service.ts`
   - Detalle: interfaces `Bill`, `PointsRule`, `BillRequest`; servicio con `requestBill(orderId, body)`, `getBill(orderId)`, `getPointsRules(restaurantId)` y `getMyPoints(restaurantId)`. Centralizado en `core/` como el resto de la app.
 - [ ] **T23 — web-clientes: UI "Pedir la cuenta" en el detalle del pedido** (~10 min)
