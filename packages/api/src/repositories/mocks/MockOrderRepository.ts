@@ -25,4 +25,10 @@ export class MockOrderRepository implements OrderRepository {
     async findByClientId(clientId: string): Promise<Order[]> {
         return this.orders.filter(o => o.clientId === clientId)
     }
+
+    async findByTable(tableId: string, since: Date): Promise<Order[]> {
+        return this.orders
+            .filter(o => o.tableId === tableId && o.createdAt.getTime() >= since.getTime())
+            .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    }
 }
