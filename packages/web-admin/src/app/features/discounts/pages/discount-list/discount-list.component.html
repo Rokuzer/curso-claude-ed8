@@ -1,0 +1,64 @@
+<div class="fade-in">
+  <div class="page-header">
+    <h1>Descuentos</h1>
+    <div class="header-actions">
+      <a routerLink="new" class="btn btn-primary">
+        <lucide-icon name="plus" [size]="16"></lucide-icon>
+        Nuevo código
+      </a>
+    </div>
+  </div>
+
+  @if (store.loading()) {
+    <div class="spinner"></div>
+  } @else if (store.error()) {
+    <div class="alert-error">{{ store.error() }}</div>
+  } @else if (store.discounts().length === 0) {
+    <div class="empty-state card">
+      <lucide-icon name="ticket" [size]="40"></lucide-icon>
+      <p>No hay códigos de descuento para este restaurante</p>
+    </div>
+  } @else {
+    <div class="card table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Usos</th>
+            <th>Caduca</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of store.discounts(); track d.id) {
+            <tr>
+              <td class="discount-code">{{ d.code }}</td>
+              <td>{{ typeLabels[d.type] }}</td>
+              <td>{{ valueLabel(d) }}</td>
+              <td>{{ d.usedCount }}{{ d.maxUses !== null ? ' / ' + d.maxUses : '' }}</td>
+              <td>{{ d.expiresAt ? (d.expiresAt | date: 'dd/MM/yyyy') : '—' }}</td>
+              <td>
+                <span class="badge" [class.status-active]="d.active" [class.status-inactive]="!d.active">
+                  {{ d.active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <a [routerLink]="[d.id, 'edit']" class="btn btn-secondary btn-sm">
+                    <lucide-icon name="edit" [size]="14"></lucide-icon>
+                  </a>
+                  <button class="btn btn-danger btn-sm" (click)="onDelete(d.id)">
+                    <lucide-icon name="trash-2" [size]="14"></lucide-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

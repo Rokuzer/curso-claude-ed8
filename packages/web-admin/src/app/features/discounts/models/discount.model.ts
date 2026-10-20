@@ -58,3 +58,20 @@ export function discountErrorMessage(err: unknown, fallback: string): string {
   const code = (err as { error?: { error?: string } })?.error?.error
   return (code && DISCOUNT_ERROR_MESSAGES[code]) || fallback
 }
+
+export function discountValueLabel(discount: Pick<DiscountCode, 'type' | 'value'>): string {
+  return discount.type === 'percent' ? `${discount.value} %` : `${discount.value} €`
+}
+
+/** Converts an ISO date-time to the `yyyy-mm-dd` value of a date input (local time). */
+export function toDateInput(iso: string | null): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/** Converts a `yyyy-mm-dd` date input to the ISO date-time of the end of that local day. */
+export function fromDateInput(value: string): string | null {
+  return value ? new Date(`${value}T23:59:59`).toISOString() : null
+}

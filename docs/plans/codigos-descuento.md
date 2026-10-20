@@ -65,7 +65,7 @@ Cubrir la issue #8 "Códigos de descuentos" (etiquetas `proyecto:api`, `proyecto
 - [x] **T18 — web-admin: modelo, servicio y store de descuentos** (~10 min)
   - Archivos: `packages/web-admin/src/app/features/discounts/models/discount.model.ts`, `.../services/discount.service.ts`, `.../store/discount.store.ts`
   - Detalle: copiar el patrón de `features/mesas/` (signals privados con `asReadonly()`, `firstValueFrom`, `DISCOUNT_ERROR_MESSAGES` y `discountErrorMessage`). Servicio contra `${environment.apiUrl}/restaurants/${restaurantId}/discounts`; incluir también las llamadas a `points-rules`.
-- [ ] **T19 — web-admin: páginas de lista y formulario de códigos** (~10 min)
+- [x] **T19 — web-admin: páginas de lista y formulario de códigos** (~10 min)
   - Archivos: `.../features/discounts/pages/discount-list/`, `.../pages/discount-form/`, `.../features/discounts/discounts.routes.ts`
   - Detalle: lista con borrado confirmado y formulario con `FormsModule`/`ngModel` (tipo, valor, activo, caducidad, usos máximos), como `mesa-list`/`mesa-form`; `DISCOUNT_ROUTES` con `''`, `'new'`, `':id/edit'`.
 - [ ] **T20 — web-admin: página de tramos puntos→descuento** (~8 min)
